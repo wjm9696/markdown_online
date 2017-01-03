@@ -2,7 +2,7 @@
   "name": "type_match",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "dependencies": {
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-react": "^6.16.0"
