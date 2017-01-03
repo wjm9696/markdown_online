@@ -13,5 +13,5 @@
   },
   "author": "",
   "license": "ISC",
-  "install": "cd client && npm run build && cd .."
+  "install": "cd client && npm run build && cd .. && npm install express"
 }
