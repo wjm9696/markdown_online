@@ -1,0 +1,7 @@
+gapi.auth2.getAuthInstance().isSignedIn.get()
+
+gapi.auth2.getAuthInstance().currentUser.get()
+
+gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile()
+
+googleUser.getAuthResponse().id_token;

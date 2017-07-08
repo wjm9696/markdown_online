@@ -1,0 +1,21 @@
+/get/pdf
+request:
+{
+    content: "some content",
+    userID: "diuhiu2hedu28d2",
+    fileName: "document"
+}
+response:{
+    apiCall: "/get/pdf/file/:br2nC"
+}
+
+/get/pdf/file/:fileID
+request{
+    
+}
+
+post   /put/login
+request:{
+    userToken: cdcjdksbckjdsbckjdbcjks
+}
+
