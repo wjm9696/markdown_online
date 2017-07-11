@@ -1,1 +1,5 @@
 pip install markdown2pdf
+
+brew install mongodb
+mkdir -p data/db
+mongod --dbpath data/db

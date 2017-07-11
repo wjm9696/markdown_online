@@ -25,14 +25,9 @@ var setUpApi = function(app){
       console.log(fileID);
       markdownpdf().from(path + '/' + fileName + ".md").to(pdfPath + '/' + fileID + ".pdf", function () {
         res.json({ apiCall: '/get/pdf/file/' + fileID });
+        console.log('converted');
         res.end();
       })
-      // let stream = fs.createReadStream(path + '/' + fileName + ".md")
-      // stream.pipe(markdownpdf())
-      //   .pipe(fs.createWriteStream(pdfPath + '/' + fileID + ".pdf"))
-      // stream.on('close', function () {
-      //   res.json({ apiCall: '/get/pdf/file/' + fileID });
-      // });
     })
   })
 

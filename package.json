@@ -4,9 +4,12 @@
   "private": true,
   "dependencies": {
     "body-parser": "^1.17.2",
+    "cores": "^0.8.5",
+    "cors": "^2.8.3",
     "fs.promised": "^3.0.0",
+    "google-auth-library": "^0.10.0",
     "markdown-pdf": "^8.0.0",
-    "mongodb": "^2.2.29",
+    "mongodb": "^2.2.30",
     "path": "^0.12.7",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
