@@ -33,7 +33,8 @@ var Main = React.createClass({
       currentText: '',
       loggedin: false,
       userInfo: null,
-      fileID: this.makeid()
+      fileID: this.makeid(),
+      files:[]
     };
   },
   responseGoogle: (response) => {
@@ -43,9 +44,10 @@ var Main = React.createClass({
     return (
       <div>
         <User mainState={this}></User>
-        <Toolbar fileID={this.state.fileID}></Toolbar>
+        <Toolbar mainState={this} makeid={this.makeid}></Toolbar>
         <TextField mainState={this}></TextField>
         <Display currentText={this.state.currentText}></Display>
+        <FileList mainState={this}></FileList>
 
       </div>
     )
@@ -54,26 +56,41 @@ var Main = React.createClass({
 
 var Toolbar = React.createClass({
   onClickGetPdf: () => {
+
     const content = document.getElementById("markdown_input").value;
     console.log("getCliked");
     fileApi.requestForPdf(content, "12356", "file123456")
 
   },
-  onClickSave: (fileID) => {
+  onClickSave: async (mainState) => {
+    
     const fileContent = document.getElementById("markdown_input").value;
     const fileTitle = document.getElementById("file_name").value;
     const currentGoogleUser = gapi.auth2.getAuthInstance().currentUser.get();
     const userToken = currentGoogleUser.getAuthResponse().id_token;
-    fileApi.saveFile(fileTitle, fileContent, fileID, userToken);
+    fileApi.saveFile(fileTitle, fileContent, mainState.state.fileID, userToken).then(()=>{
+      return fileApi.getFile(userToken)
+    }).then((files)=>{
+      mainState.setState({files: files});;
+    });
+    
+  },
+  createNewFile: (mainState, makeid) =>{
+    document.getElementById("markdown_input").value = '';
+    document.getElementById("file_name").value = '';
+    const newID = makeid();
+    mainState.setState({fileID: newID,
+                        currentText:''
+    });
   },
 
   render() {
     return (
       <div>
         <input type="text" id="file_name"></input>
-        <button onClick={()=>this.onClickSave(this.props.fileID)}>save</button>
+        <button onClick={()=>this.onClickSave(this.props.mainState)}>save</button>
         <button onClick={this.onClickGetPdf}>generate PDF</button>
-        <button></button>
+        <button onClick={()=>this.createNewFile(this.props.mainState, this.props.makeid)}>new file</button>
       </div>
     )
   }
@@ -146,13 +163,15 @@ var Signout = React.createClass({
 
 var Signin = React.createClass({
   onSignIn: function () {
+    const currentGoogleUser = gapi.auth2.getAuthInstance().currentUser.get();
+    const currentToken = currentGoogleUser.getAuthResponse().id_token;
+    fileApi.getFile(currentToken).then((files)=>{
+      this.props.mainState.setState({files: files});
+    });
     this.props.mainState.setState({
       loggedin: true,
       userInfo: gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile(),
     });
-    console.log("sigin");
-    const currentGoogleUser = gapi.auth2.getAuthInstance().currentUser.get();
-    const currentToken = currentGoogleUser.getAuthResponse().id_token;
     userApi.signin(currentToken);
   },
   componentDidMount: function () {
@@ -171,6 +190,42 @@ var Signin = React.createClass({
       <div>
         <Script url="https://apis.google.com/js/platform.js" />
         <div id="g-signin2" data-longtitle="true"></div>
+      </div>
+    )
+  }
+})
+
+var FileList = React.createClass({
+  updateCurrentFile: function(file){
+    this.props.mainState.setState({
+      currentText: file.fileContent,
+      fileID: file.fileID
+    
+  });
+    document.getElementById("markdown_input").value = file.fileContent;
+    document.getElementById("file_name").value = file.fileTitle;
+
+
+  },
+  render() {
+    var resultNodes = this.props.mainState.state.files.map((file)=>{
+      return(
+        <FileListNode file={file} updateCurrentFile={this.updateCurrentFile}/>
+      );
+    });
+    return (
+      <div>
+        {resultNodes}
+      </div>
+    )
+  }
+})
+
+var FileListNode = React.createClass({
+  render(){
+    return(
+      <div onClick={()=>this.props.updateCurrentFile(this.props.file)}>
+        {this.props.file.fileTitle}
       </div>
     )
   }

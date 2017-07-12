@@ -1,6 +1,6 @@
-let request = require('request');
+let request = require('request-promise');
 
-let requestForPdf = function (content, userID, fileName) {
+const requestForPdf = function (content, userID, fileName) {
     let options = {
         url: "http://localhost:3001/get/pdf",
         method: 'POST',
@@ -14,18 +14,28 @@ let requestForPdf = function (content, userID, fileName) {
     });
 }
 
-let saveFile = function(fileTitle, fileContent, fileID, userToken) {
+const saveFile = function(fileTitle, fileContent, fileID, userToken) {
     let options = {
         url: "http://localhost:3001/put/save",
         method: 'POST',
         json: { fileTitle: fileTitle, fileContent: fileContent, fileID:fileID, userToken: userToken }
     }
-    request(options, (error, response, body) => {
-        let message = response.body.message;
-        console.log(message);
+    return request(options).then((res)=>{
+        return res;
+    });
+}
+
+const getFile = function(userToken) {
+    let options = {
+        url: "http://localhost:3001/get/files",
+        method: 'POST',
+        json: {userToken: userToken}
+    }
+    return request(options).then((res)=>{
+        return res;
     });
 }
 
 exports.requestForPdf = requestForPdf;
 exports.saveFile = saveFile;
-
+exports.getFile = getFile;

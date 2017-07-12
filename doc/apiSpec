@@ -29,3 +29,12 @@ response:{
     message
 }
 
+post /get/files
+request:{
+    userToken
+}response:{
+    files:[
+        
+    ]
+}
+

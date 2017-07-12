@@ -79,6 +79,29 @@ const setUpApi = async function (app) {
 
     })
 
+
+    app.post('/get/files', async function(req, res) {
+        try{
+            const userToken = req.body.userToken;
+            const userInfo = googleTokenValidation.getUserInfo(userToken);
+            if (userInfo.email == null) {
+                res.end();
+            }else{
+                const results = [];
+                const db = await MongoClient.connect(url);
+                const user = await db.collection("users").findOne({ 'email': userInfo.email });
+                for(let i = 0; i<user.files.length; i++){
+                    const currentFileID = user.files[i];
+                    const file = await db.collection("files").findOne({'fileID': currentFileID});
+                    results.push(file);
+                }
+                res.json(results);
+                res.end();
+            }
+        } catch (e) {
+            throw e;
+        }
+    })
     app.post('/put/save', async function (req, res) {
         //TODO: optimize this
         try {
@@ -109,7 +132,6 @@ const setUpApi = async function (app) {
                         const user = await db.collection('users').findOne({ 'email': userEmail });
                         user.files.push(fileID);
                     }
-                    console.log(db);
                 } else {
                     const newFile = new MarkdownFile(fileTitle, fileContent, fileID, [userEmail]);
                     const db = await MongoClient.connect(url);
@@ -117,6 +139,8 @@ const setUpApi = async function (app) {
                     await db.collection("users").update({ email: userEmail }, user);
                     await db.collection("files").insert(newFile);
                 }
+                res.send();
+                res.end();
             }
         } catch (e) {
             throw e;
