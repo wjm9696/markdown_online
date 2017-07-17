@@ -25,16 +25,16 @@ var allowCrossDomain = function(req, res, next) {
       next();
     }
 };
-app.use(function (req, res, next) {
-    console.log("signin"+req.body);
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    //res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    res.send(200);
-    return next(new Error());
-});
+// app.use(function (req, res, next) {
+//     console.log("signin"+req.body);
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+//     //res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//     res.send(200);
+//     return next(new Error());
+// });
 //app.use(allowCrossDomain);
-//app.use(cors());
+app.use(cors());
 app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded()); // to support URL-encoded bodies
 pdfApi.setUpApi(app);
