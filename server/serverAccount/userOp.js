@@ -79,6 +79,8 @@ const setUpApi = async function (app) {
 
     })
 
+    
+
 
     app.post('/get/files', async function(req, res) {
         try{
@@ -143,6 +145,20 @@ const setUpApi = async function (app) {
                 res.end();
             }
         } catch (e) {
+            throw e;
+        }
+    })
+
+    app.post('/get/file', async function(req, res) {
+        try{
+            console.log(req.body);
+            const fileID = req.body.fileID;
+            const db = await MongoClient.connect(url);
+            const file = await db.collection("files").findOne({'fileID': fileID});
+            console.log(file);
+            res.json(file);
+            res.end();
+        } catch(e) {
             throw e;
         }
     })

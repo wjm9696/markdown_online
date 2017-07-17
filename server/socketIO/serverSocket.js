@@ -1,32 +1,34 @@
-const express = require('express'),
-  socketio = require('socket.io'),
-  process = require('process'),
-  socketioRedis = require('socket.io-redis');
+const socketio = require('socket.io');
+const process = require('process');
+const socketioRedis = require('socket.io-redis');
+const RedisServer = require('redis-server');
+// const redisServer = new RedisServer({
+//   port: 6379,
+//   bin: './redis-3.2.9/src/redis-server'
+// });
 
-var app = express();
-//var server = app.listen(process.argv[2]);
-var server = app.listen(process.env.PORT, function () {
-  console.log('socket io server listening on port' + process.env.PORT)
-})
-var io = socketio(server);
-//var io = require('socket.io')(3003)
+const setUpApi = function (app, server) {
+  //redisServer.open((err) => {
+    // if (err === null) {
+    //   console.log(err);
+    // }
+    var io = socketio(server);
+    //io.adapter(socketioRedis({ host: '127.0.0.1', port: 16379 }));
+    io.on('connection', (socket) => {
+      console.log("conneted");
+      socket.on('joinFile', (fileID) => {
+        socket.join(fileID);
+      });
+      socket.on('updateContent', (info) => {
+        const fileID = info.fileID;
+        const content = info.content;
+        console.log('updateContent'+fileID);
 
-//app.use(express.static('static'));
+        io.to(fileID).emit('contentIn', content);
+      });
+    //});
+  });
 
-io.adapter(socketioRedis({host: "localhost", port: 16379}));
-io.on('connection', (socket) => {
-  console.log("connect")
-  io.emit('event',"shitEvent");
-  socket.on('test_event', (message) => {
-    console.log(message);
-    
-    // Object.keys(socket.rooms).filter((r) => r != socket.id)
-    // .forEach((r) => socket.leave(r));
+}
 
-    // setTimeout(() => {
-    //   socket.join(room);
-    //   socket.emit('event', 'Joined room ' + room);
-    //   socket.broadcast.to(room).emit('event', 'Someone joined room ' + room);
-    // }, 0);
-  })
-});
+exports.setUpApi = setUpApi;

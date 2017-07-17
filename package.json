@@ -15,9 +15,12 @@
     "react-dom": "^15.6.1",
     "react-google-login": "^2.9.2",
     "react-load-script": "0.0.4",
+    "redis-server": "^1.1.0",
     "request-promise": "^4.2.1",
     "showdown": "^1.7.1",
-    "socket.io-client": "^2.0.3"
+    "socket.io": "^2.0.3",
+    "socket.io-client": "^2.0.3",
+    "socket.io-redis": "^5.1.0"
   },
   "devDependencies": {
     "react-scripts": "1.0.7"

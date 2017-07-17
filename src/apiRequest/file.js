@@ -25,7 +25,7 @@ const saveFile = function(fileTitle, fileContent, fileID, userToken) {
     });
 }
 
-const getFile = function(userToken) {
+const getFiles = function(userToken) {
     let options = {
         url: "http://localhost:3001/get/files",
         method: 'POST',
@@ -36,6 +36,19 @@ const getFile = function(userToken) {
     });
 }
 
+const getFile = function(fileID) {
+    let options = {
+        url: "http://localhost:3001/get/file",
+        method: 'POST',
+        json: {fileID: fileID}
+    }
+    return request(options).then((res)=>{
+        return res;
+    });
+}
+
 exports.requestForPdf = requestForPdf;
 exports.saveFile = saveFile;
 exports.getFile = getFile;
+exports.getFiles = getFiles;
+

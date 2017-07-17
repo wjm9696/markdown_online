@@ -13,6 +13,7 @@ var setUpApi = function(app){
   }
 
   app.post('/get/pdf', function (req, res) {
+    console.log(req.url);
     console.log("?");
     let contentString = req.body.content;
     let userID = req.body.userID;

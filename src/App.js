@@ -6,8 +6,9 @@ import './App.css';
 import io from 'socket.io-client';
 import GoogleLogin from 'react-google-login';
 import Script from 'react-load-script'
+
 var ReactDOM = require('react-dom');
-//var socket = io.connect('http://localhost:3000/');
+var socket = io.connect('http://localhost:3001/');
 var fileApi = require('./apiRequest/file.js');
 var userApi = require('./apiRequest/signInOut.js')
 var showdown = require('showdown');
@@ -19,6 +20,17 @@ class App extends Component {
 }
 
 var Main = React.createClass({
+  updateCurrentFile: function (file) {
+    this.setState({
+      currentText: file.fileContent,
+      fileID: file.fileID
+
+    });
+    document.getElementById("markdown_input").value = file.fileContent;
+    document.getElementById("file_name").value = file.fileTitle;
+
+
+  },
   makeid: function () {
     let text = "";
     const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -34,7 +46,7 @@ var Main = React.createClass({
       loggedin: false,
       userInfo: null,
       fileID: this.makeid(),
-      files:[]
+      files: []
     };
   },
   responseGoogle: (response) => {
@@ -45,14 +57,43 @@ var Main = React.createClass({
       <div>
         <User mainState={this}></User>
         <Toolbar mainState={this} makeid={this.makeid}></Toolbar>
+        <Sharing mainState={this} updateCurrentFile={this.updateCurrentFile}></Sharing>
         <TextField mainState={this}></TextField>
         <Display currentText={this.state.currentText}></Display>
-        <FileList mainState={this}></FileList>
-
+        <FileList mainState={this} updateCurrentFile={this.updateCurrentFile}></FileList>
       </div>
     )
   }
 })
+
+var Sharing = React.createClass({
+  onToggleID: function () {
+    var fileIDSpan = document.getElementById('fileIDSpan');
+    if (fileIDSpan.style.display === 'none') {
+      fileIDSpan.style.display = 'inline';
+    } else {
+      fileIDSpan.style.display = 'none';
+    }
+  },
+  onJoinFile: function (mainState, updateCurrentFile) {
+    let fileID = document.getElementById("fileIDtoJoin").value;
+    socket.emit('joinFile',fileID);
+    fileApi.getFile(fileID).then((file) => {
+      updateCurrentFile(file);
+    });
+  },
+  render() {
+    return (
+      <div>
+        <input type="text" id="fileIDtoJoin"></input>
+        <button onClick={() => this.onJoinFile(this.props.mainState, this.props.updateCurrentFile)}>Join file</button>
+        <button onClick={this.onToggleID}>Share</button>
+        <span id="fileIDSpan">{this.props.mainState.state.fileID}</span>
+      </div>
+    )
+  }
+})
+
 
 var Toolbar = React.createClass({
   onClickGetPdf: () => {
@@ -63,24 +104,27 @@ var Toolbar = React.createClass({
 
   },
   onClickSave: async (mainState) => {
-    
+
     const fileContent = document.getElementById("markdown_input").value;
     const fileTitle = document.getElementById("file_name").value;
     const currentGoogleUser = gapi.auth2.getAuthInstance().currentUser.get();
     const userToken = currentGoogleUser.getAuthResponse().id_token;
-    fileApi.saveFile(fileTitle, fileContent, mainState.state.fileID, userToken).then(()=>{
-      return fileApi.getFile(userToken)
-    }).then((files)=>{
-      mainState.setState({files: files});;
+    const fileID = mainState.state.fileID;
+    socket.emit('joinFile',fileID);
+    fileApi.saveFile(fileTitle, fileContent, fileID, userToken).then(() => {
+      return fileApi.getFiles(userToken)
+    }).then((files) => {
+      mainState.setState({ files: files });;
     });
-    
+
   },
-  createNewFile: (mainState, makeid) =>{
+  createNewFile: (mainState, makeid) => {
     document.getElementById("markdown_input").value = '';
     document.getElementById("file_name").value = '';
     const newID = makeid();
-    mainState.setState({fileID: newID,
-                        currentText:''
+    mainState.setState({
+      fileID: newID,
+      currentText: ''
     });
   },
 
@@ -88,18 +132,25 @@ var Toolbar = React.createClass({
     return (
       <div>
         <input type="text" id="file_name"></input>
-        <button onClick={()=>this.onClickSave(this.props.mainState)}>save</button>
+        <button onClick={() => this.onClickSave(this.props.mainState)}>save</button>
         <button onClick={this.onClickGetPdf}>generate PDF</button>
-        <button onClick={()=>this.createNewFile(this.props.mainState, this.props.makeid)}>new file</button>
+        <button onClick={() => this.createNewFile(this.props.mainState, this.props.makeid)}>new file</button>
       </div>
     )
   }
 })
 
 var TextField = React.createClass({
+  componentDidMount: function() {
+    socket.on('contentIn', (content)=>{
+      document.getElementById("markdown_input").value = content;
+      this.props.mainState.setState({ currentText: content });
+    })
+  },
   onchange: function () {
     let content = document.getElementById("markdown_input").value;
     this.props.mainState.setState({ currentText: content });
+    socket.emit('updateContent',{fileID:this.props.mainState.state.fileID, content:content})
   },
   render() {
     return (
@@ -165,14 +216,14 @@ var Signin = React.createClass({
   onSignIn: function () {
     const currentGoogleUser = gapi.auth2.getAuthInstance().currentUser.get();
     const currentToken = currentGoogleUser.getAuthResponse().id_token;
-    fileApi.getFile(currentToken).then((files)=>{
-      this.props.mainState.setState({files: files});
+    fileApi.getFiles(currentToken).then((files) => {
+      this.props.mainState.setState({ files: files });
     });
     this.props.mainState.setState({
       loggedin: true,
       userInfo: gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile(),
     });
-    userApi.signin(currentToken);
+    //userApi.signin(currentToken);
   },
   componentDidMount: function () {
     gapi.signin2.render('g-signin2', {
@@ -196,35 +247,26 @@ var Signin = React.createClass({
 })
 
 var FileList = React.createClass({
-  updateCurrentFile: function(file){
-    this.props.mainState.setState({
-      currentText: file.fileContent,
-      fileID: file.fileID
-    
-  });
-    document.getElementById("markdown_input").value = file.fileContent;
-    document.getElementById("file_name").value = file.fileTitle;
 
-
-  },
   render() {
-    var resultNodes = this.props.mainState.state.files.map((file)=>{
-      return(
-        <FileListNode file={file} updateCurrentFile={this.updateCurrentFile}/>
+    var FileLoaded = this.props.mainState.state.files!==null;
+    var resultNodes = this.props.mainState.state.files.map((file) => {
+      return (
+        <FileListNode file={file} updateCurrentFile={this.props.updateCurrentFile} />
       );
     });
     return (
       <div>
-        {resultNodes}
+        {FileLoaded?resultNodes:null}
       </div>
     )
   }
 })
 
 var FileListNode = React.createClass({
-  render(){
-    return(
-      <div onClick={()=>this.props.updateCurrentFile(this.props.file)}>
+  render() {
+    return (
+      <div onClick={() => this.props.updateCurrentFile(this.props.file)}>
         {this.props.file.fileTitle}
       </div>
     )

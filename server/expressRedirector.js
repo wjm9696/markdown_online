@@ -1,9 +1,10 @@
 const express = require('express');
 const app = express();
-const pdfApi = require('./pdfGeneration/pdfGeneration');
-const userApi = require('./serverAccount/userOp.js');
 const bodyParser = require('body-parser');
-var cors = require('cors')
+
+server = app.listen(3001, function () {
+    console.log('director listening on port 3001!');
+})
 var allowCrossDomain = function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
@@ -19,17 +20,17 @@ var allowCrossDomain = function(req, res, next) {
       next();
     }
 };
-// app.use(function (req, res, next) {
-//     res.header("Access-Control-Allow-Origin", "*");
-//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-//     next();
-// });
 app.use(allowCrossDomain);
-//app.use(cors());
 app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded()); // to support URL-encoded bodies
-pdfApi.setUpApi(app);
-userApi.setUpApi(app);
-app.listen(3001, function () {
-    console.log('Example app listening on port 3001!')
+
+
+app.get('*',function(req,res){  
+    console.log("localhost:3002/"+req.url);
+    res.redirect("http://localhost:3002/"+req.url);  
+})
+
+app.post('*',function(req,res){  
+    console.log("localhost:3002"+req.url);
+    res.redirect("http://ocalhost:3002"+req.url);   
 })

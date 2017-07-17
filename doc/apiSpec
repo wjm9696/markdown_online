@@ -38,3 +38,10 @@ request:{
     ]
 }
 
+post /get/files
+request:{
+    fileID
+}response:{
+    file
+}
+
