@@ -60,7 +60,7 @@ const getFile = async function (fileId) {
 const setUpApi = async function (app) {
     app.post('/put/signin', function (req, res) {
         try{
-        console.log("signin"+req.body);
+        console.log("signin"+req.body.userToken);
         let userToken = req.body.userToken;
         let userInfo = googleTokenValidation.getUserInfo(userToken);
         if (userInfo.email != null) {
