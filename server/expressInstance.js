@@ -22,6 +22,7 @@ var allowCrossDomain = function(req, res, next) {
       return next(new Error());
     }
     else {
+      console.log("==")
       next();
     }
 };
