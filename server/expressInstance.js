@@ -29,7 +29,8 @@ app.use(function (req, res, next) {
     console.log("signin"+req.body);
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
+    res.send(200);
+    return next(new Error());
 });
 app.use(allowCrossDomain);
 app.use(cors());
