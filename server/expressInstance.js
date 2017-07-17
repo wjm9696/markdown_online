@@ -33,8 +33,8 @@ app.use(function (req, res, next) {
     res.send(200);
     return next(new Error());
 });
-app.use(allowCrossDomain);
-app.use(cors());
+//app.use(allowCrossDomain);
+//app.use(cors());
 app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded()); // to support URL-encoded bodies
 pdfApi.setUpApi(app);
