@@ -28,6 +28,7 @@ var allowCrossDomain = function(req, res, next) {
 app.use(function (req, res, next) {
     console.log("signin"+req.body);
     res.header("Access-Control-Allow-Origin", "*");
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.send(200);
     return next(new Error());
