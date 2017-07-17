@@ -73,7 +73,8 @@ const setUpApi = async function (app) {
                 }
             })
         }
-        }catch(e){
+    }catch(e){
+            console.log(e)
             throw e;
         }
 
