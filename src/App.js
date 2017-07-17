@@ -224,6 +224,7 @@ var Signin = React.createClass({
       loggedin: true,
       userInfo: gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile(),
     });
+    console.log(currentToken);
     userApi.signin(currentToken);
   },
   componentDidMount: function () {

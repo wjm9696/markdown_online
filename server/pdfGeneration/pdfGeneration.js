@@ -19,6 +19,7 @@ var setUpApi = function(app){
     let contentString = req.body.content;
     let userID = req.body.userID;
     let fileName = req.body.fileName;
+    console.log(fileName);
     path = "store/markdownStore/" + userID;
     pdfPath = "store/pdfStore/"
     mkdirp(path, async function (err) {

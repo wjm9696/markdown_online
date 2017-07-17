@@ -1,7 +1,9 @@
 let request = require('request');
+const config = require('./../config.json');
+const serverIP = config.serverIP;
 let signin = function (userToken) {
     let options = {
-        url: "http://localhost:3001/put/signin",
+        url: serverIP + ":3001/put/signin",
         method: 'POST',
         json: {userToken: userToken}
     };
