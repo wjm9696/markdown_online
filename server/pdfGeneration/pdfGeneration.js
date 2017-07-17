@@ -11,6 +11,7 @@ var setUpApi = function(app){
 
     return text;
   }
+  console.log("shit");
 
   app.post('/get/pdf', function (req, res) {
     console.log(req.url);
