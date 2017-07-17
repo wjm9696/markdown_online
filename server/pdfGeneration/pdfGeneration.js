@@ -25,7 +25,9 @@ var setUpApi = function(app){
     mkdirp(path, async function (err) {
       await fs.writeFile(path + '/' + fileName + ".md", contentString).then(console.log("saved"));
       let fileID = makeid();
-      console.log(fileID);
+      //console.log(fileID);
+      console.log(path + '/' + fileName + ".md");
+      console.log(pdfPath + '/' + fileID + ".pdf");
       markdownpdf().from(path + '/' + fileName + ".md").to(pdfPath + '/' + fileID + ".pdf", function () {
         res.json({ apiCall: '/get/pdf/file/' + fileID });
         console.log('converted');
