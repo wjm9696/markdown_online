@@ -1,7 +1,7 @@
 const googleTokenValidation = require('./googleTokenValidation');
 const MongoClient = require('mongodb').MongoClient;
 const express = require('express');
-const url = "mongodb://localhost:27017/mydb";
+const url = "mongodb://localhost:27017/markdown_online";
 
 class User {
     constructor(email, firstName, lastName, picture) {

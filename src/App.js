@@ -6,9 +6,10 @@ import './App.css';
 import io from 'socket.io-client';
 import GoogleLogin from 'react-google-login';
 import Script from 'react-load-script'
-
+const config = require('./config.json');
+const serverIP = config.serverIP;
 var ReactDOM = require('react-dom');
-var socket = io.connect('http://localhost:3001/');
+var socket = io.connect(serverIP+':3001/');
 var fileApi = require('./apiRequest/file.js');
 var userApi = require('./apiRequest/signInOut.js')
 var showdown = require('showdown');

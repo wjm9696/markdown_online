@@ -1,8 +1,9 @@
 let request = require('request-promise');
-
+const config = require('./../config.json');
+const serverIP = config.serverIP;
 const requestForPdf = function (content, userID, fileName) {
     let options = {
-        url: "http://localhost:3001/get/pdf",
+        url: serverIP + ":3001/get/pdf",
         method: 'POST',
         json: { content: content, userID: "diuhiu2hedu28d2", fileName: "document" }
     };
@@ -10,13 +11,13 @@ const requestForPdf = function (content, userID, fileName) {
 
     request(options, (error, response, body) => {
         let apiCall = response.body.apiCall;
-        window.open("http://localhost:3001"+apiCall, '_blank');
+        window.open(serverIP + ":3001"+apiCall, '_blank');
     });
 }
 
 const saveFile = function(fileTitle, fileContent, fileID, userToken) {
     let options = {
-        url: "http://localhost:3001/put/save",
+        url: serverIP + ":3001/put/save",
         method: 'POST',
         json: { fileTitle: fileTitle, fileContent: fileContent, fileID:fileID, userToken: userToken }
     }
@@ -27,7 +28,7 @@ const saveFile = function(fileTitle, fileContent, fileID, userToken) {
 
 const getFiles = function(userToken) {
     let options = {
-        url: "http://localhost:3001/get/files",
+        url: serverIP + ":3001/get/files",
         method: 'POST',
         json: {userToken: userToken}
     }
@@ -38,7 +39,7 @@ const getFiles = function(userToken) {
 
 const getFile = function(fileID) {
     let options = {
-        url: "http://localhost:3001/get/file",
+        url: serverIP + ":3001/get/file",
         method: 'POST',
         json: {fileID: fileID}
     }
