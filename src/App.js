@@ -224,7 +224,7 @@ var Signin = React.createClass({
       loggedin: true,
       userInfo: gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile(),
     });
-    //userApi.signin(currentToken);
+    userApi.signin(currentToken);
   },
   componentDidMount: function () {
     gapi.signin2.render('g-signin2', {
@@ -251,7 +251,7 @@ var FileList = React.createClass({
 
   render() {
     var FileLoaded = this.props.mainState.state.files!==null;
-    var resultNodes = this.props.mainState.state.files.map((file) => {
+    var resultNodes = this.props.mainState.state.files && this.props.mainState.state.files.map((file) => {
       return (
         <FileListNode file={file} updateCurrentFile={this.props.updateCurrentFile} />
       );
