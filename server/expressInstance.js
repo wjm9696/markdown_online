@@ -34,7 +34,7 @@ var allowCrossDomain = function(req, res, next) {
 //     //return next(new Error());
 // });
 app.use(allowCrossDomain);
-app.use(cors());
+//app.use(cors());
 app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded()); // to support URL-encoded bodies
 pdfApi.setUpApi(app);
