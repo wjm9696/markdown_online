@@ -21,7 +21,7 @@ var setUpApi = function(app){
     let fileName = req.body.fileName;
     console.log(fileName);
     path = "store/markdownStore/" + userID;
-    pdfPath = "store/pdfStore/"
+    pdfPath = "store/pdfStore"
     mkdirp(path, async function (err) {
       await fs.writeFile(path + '/' + fileName + ".md", contentString).then(console.log("saved"));
       let fileID = makeid();
