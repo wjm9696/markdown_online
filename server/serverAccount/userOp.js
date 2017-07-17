@@ -74,6 +74,7 @@ const setUpApi = async function (app) {
                 }
             })
         }
+        
     }catch(e){
             console.log(e)
             throw e;
@@ -86,6 +87,7 @@ const setUpApi = async function (app) {
 
     app.post('/get/files', async function(req, res) {
         try{
+            console.log("getfile"+req.body.userToken);
             const userToken = req.body.userToken;
             const userInfo = googleTokenValidation.getUserInfo(userToken);
             if (userInfo.email == null) {
