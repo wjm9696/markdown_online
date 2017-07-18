@@ -9,8 +9,8 @@ import Script from 'react-load-script'
 const config = require('./config.json');
 const serverIP = config.serverIP;
 var ReactDOM = require('react-dom');
-//var socket = io.connect(serverIP+':3001/');
-var socket = null;
+var socket = io.connect(serverIP+':3001/');
+//var socket = null;
 var fileApi = require('./apiRequest/file.js');
 var userApi = require('./apiRequest/signInOut.js')
 var showdown = require('showdown');
@@ -143,12 +143,12 @@ var Toolbar = React.createClass({
 })
 
 var TextField = React.createClass({
-  // componentDidMount: function() {
-  //   socket.on('contentIn', (content)=>{
-  //     document.getElementById("markdown_input").value = content;
-  //     this.props.mainState.setState({ currentText: content });
-  //   })
-  // },
+  componentDidMount: function() {
+    socket.on('contentIn', (content)=>{
+      document.getElementById("markdown_input").value = content;
+      this.props.mainState.setState({ currentText: content });
+    })
+  },
 
   onchange: function () {
     let content = document.getElementById("markdown_input").value;
