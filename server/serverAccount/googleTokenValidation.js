@@ -1,7 +1,7 @@
 var getUserInfo = function(userToken){
   var GoogleAuth = require('google-auth-library');
   var auth = new GoogleAuth;
-  let CLIENT_ID = "100583282236-a5v13vjhvdubiqauacl8lvpkn61q5bv2.apps.googleusercontent.com";
+  let CLIENT_ID = "100583282236-h0cdnerbrmtotdmfpvnl9rf0fdd8dc5n.apps.googleusercontent.com";
   var client = new auth.OAuth2(CLIENT_ID, '', '');
   var userInfo = {};
   var result = client.verifyIdToken(
