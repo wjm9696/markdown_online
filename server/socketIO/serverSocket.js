@@ -13,7 +13,7 @@ const setUpApi = function (app, server) {
     //   console.log(err);
     // }
     var io = socketio(server);
-    //io.adapter(socketioRedis({ host: '127.0.0.1', port: 16379 }));
+    io.adapter(socketioRedis({ host: '127.0.0.1', port: 16379 }));
     io.on('connection', (socket) => {
       console.log("conneted");
       socket.on('joinFile', (fileID) => {

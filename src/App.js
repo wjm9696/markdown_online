@@ -10,7 +10,6 @@ const config = require('./config.json');
 const serverIP = config.serverIP;
 var ReactDOM = require('react-dom');
 var socket = io.connect(serverIP+':3001/');
-//var socket = null;
 var fileApi = require('./apiRequest/file.js');
 var userApi = require('./apiRequest/signInOut.js')
 var showdown = require('showdown');
