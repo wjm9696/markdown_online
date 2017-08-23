@@ -9,7 +9,7 @@ import Script from 'react-load-script'
 const config = require('./config.json');
 const serverIP = config.serverIP;
 var ReactDOM = require('react-dom');
-var socket = io.connect(serverIP+':3001/');
+var socket = io.connect(serverIP + ':3001/');
 var fileApi = require('./apiRequest/file.js');
 var userApi = require('./apiRequest/signInOut.js')
 var showdown = require('showdown');
@@ -57,11 +57,24 @@ var Main = React.createClass({
     return (
       <div>
         <User mainState={this}></User>
-        <Toolbar mainState={this} makeid={this.makeid}></Toolbar>
-        <Sharing mainState={this} updateCurrentFile={this.updateCurrentFile}></Sharing>
-        <TextField mainState={this}></TextField>
-        <Display currentText={this.state.currentText}></Display>
-        <FileList mainState={this} updateCurrentFile={this.updateCurrentFile}></FileList>
+        <div id="toolbar">
+          <Toolbar mainState={this} makeid={this.makeid}></Toolbar>
+        </div>
+        <div id="sharing">
+          <Sharing mainState={this} updateCurrentFile={this.updateCurrentFile}></Sharing>
+        </div>
+        <div className="clear"></div>
+        
+        <div id="fileListDiv">
+          <FileList mainState={this} updateCurrentFile={this.updateCurrentFile}></FileList>
+        </div>
+        <div id="textFieldDiv">
+          <TextField mainState={this}></TextField>
+        </div>
+        <div id="displayDiv">
+          <Display currentText={this.state.currentText}></Display>
+        </div>
+
       </div>
     )
   }
@@ -78,7 +91,7 @@ var Sharing = React.createClass({
   },
   onJoinFile: function (mainState, updateCurrentFile) {
     let fileID = document.getElementById("fileIDtoJoin").value;
-    socket.emit('joinFile',fileID);
+    socket.emit('joinFile', fileID);
     fileApi.getFile(fileID).then((file) => {
       updateCurrentFile(file);
     });
@@ -111,7 +124,7 @@ var Toolbar = React.createClass({
     const currentGoogleUser = gapi.auth2.getAuthInstance().currentUser.get();
     const userToken = currentGoogleUser.getAuthResponse().id_token;
     const fileID = mainState.state.fileID;
-    socket.emit('joinFile',fileID);
+    socket.emit('joinFile', fileID);
     fileApi.saveFile(fileTitle, fileContent, fileID, userToken).then(() => {
       return fileApi.getFiles(userToken)
     }).then((files) => {
@@ -142,8 +155,8 @@ var Toolbar = React.createClass({
 })
 
 var TextField = React.createClass({
-  componentDidMount: function() {
-    socket.on('contentIn', (content)=>{
+  componentDidMount: function () {
+    socket.on('contentIn', (content) => {
       console.log('contentIn');
       document.getElementById("markdown_input").value = content;
       this.props.mainState.setState({ currentText: content });
@@ -153,7 +166,7 @@ var TextField = React.createClass({
   onchange: function () {
     let content = document.getElementById("markdown_input").value;
     this.props.mainState.setState({ currentText: content });
-    socket.emit('updateContent',{fileID:this.props.mainState.state.fileID, content:content})
+    socket.emit('updateContent', { fileID: this.props.mainState.state.fileID, content: content })
   },
   render() {
     return (
@@ -254,7 +267,7 @@ var Signin = React.createClass({
 var FileList = React.createClass({
 
   render() {
-    var FileLoaded = this.props.mainState.state.files!==null;
+    var FileLoaded = this.props.mainState.state.files !== null;
     var resultNodes = this.props.mainState.state.files && this.props.mainState.state.files.map((file) => {
       return (
         <FileListNode file={file} updateCurrentFile={this.props.updateCurrentFile} />
@@ -262,7 +275,7 @@ var FileList = React.createClass({
     });
     return (
       <div>
-        {FileLoaded?resultNodes:null}
+        {FileLoaded ? resultNodes : null}
       </div>
     )
   }

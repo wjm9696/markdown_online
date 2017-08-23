@@ -22,3 +22,35 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+#fileListDiv {
+  float:left;
+  width: 10%
+}
+
+#textFieldDiv {
+  float:left;
+  width: 40%
+}
+
+#displayDiv {
+  float: left;
+  width: 50%
+}
+
+#markdown_input {
+  width: 90%
+  
+}
+
+#toolbar {
+  float: left
+}
+
+#sharing {
+  float: right
+}
+
+.clear {
+  clear: right
+}
