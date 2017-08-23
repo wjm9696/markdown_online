@@ -58,47 +58,47 @@ const getFile = async function (fileId) {
 };
 
 const setUpApi = async function (app) {
-    app.post('/put/signin', function (req, res) {
-        try{
-        console.log("signin"+req.body.userToken);
-        let userToken = req.body.userToken;
-        let userInfo = googleTokenValidation.getUserInfo(userToken);
-        if (userInfo.email != null) {
-            const user = new User(userInfo.email, userInfo.given_name, userInfo.family_name, userInfo.picture);
-            const result = getUser(user);
-            result.then((exist) => {
+    app.post('/put/signin', async function (req, res) {
+        try {
+            console.log("signin" + req.body.userToken);
+            let userToken = req.body.userToken;
+            let userInfo = googleTokenValidation.getUserInfo(userToken);
+            console.log(userInfo);
+            if (userInfo.email != null) {
+                const user = new User(userInfo.email, userInfo.given_name, userInfo.family_name, userInfo.picture);
+                const exist = await getUser(user);
                 if (exist == null) {
+                    console.log("registering")
                     registerUserInfo(user);
                 } else {
                     console.log("user exist");
                 }
-            })
-        }
-        
-    }catch(e){
+            }
+
+        } catch (e) {
             console.log(e)
             throw e;
         }
 
     })
 
-    
 
 
-    app.post('/get/files', async function(req, res) {
-        try{
-            console.log("getfile"+req.body.userToken);
+
+    app.post('/get/files', async function (req, res) {
+        try {
+            console.log("getfile" + req.body.userToken);
             const userToken = req.body.userToken;
             const userInfo = googleTokenValidation.getUserInfo(userToken);
             if (userInfo.email == null) {
                 res.end();
-            }else{
+            } else {
                 const results = [];
                 const db = await MongoClient.connect(url);
                 const user = await db.collection("users").findOne({ 'email': userInfo.email });
-                for(let i = 0; i<user.files.length; i++){
+                for (let i = 0; i < user.files.length; i++) {
                     const currentFileID = user.files[i];
-                    const file = await db.collection("files").findOne({'fileID': currentFileID});
+                    const file = await db.collection("files").findOne({ 'fileID': currentFileID });
                     results.push(file);
                 }
                 res.json(results);
@@ -116,8 +116,10 @@ const setUpApi = async function (app) {
             const fileTitle = req.body.fileTitle;
             const fileContent = req.body.fileContent;
             const fileID = req.body.fileID;
-            const userInfo = googleTokenValidation.getUserInfo(userToken);
-            if (userInfo.email == null) {
+            //console.log(userToken);
+            const userInfo = await googleTokenValidation.getUserInfo(userToken);
+            console.log("email", userInfo);
+            if (userInfo == null) {
                 res.json({ message: 'error, user not log in' });
                 res.end();
             } else {
@@ -141,6 +143,7 @@ const setUpApi = async function (app) {
                     }
                 } else {
                     const newFile = new MarkdownFile(fileTitle, fileContent, fileID, [userEmail]);
+                    console.log(146, newFile);
                     const db = await MongoClient.connect(url);
                     user.files.push(fileID);
                     await db.collection("users").update({ email: userEmail }, user);
@@ -150,20 +153,20 @@ const setUpApi = async function (app) {
                 res.end();
             }
         } catch (e) {
-            throw e;
+            console.log(e);
         }
     })
 
-    app.post('/get/file', async function(req, res) {
-        try{
+    app.post('/get/file', async function (req, res) {
+        try {
             console.log(req.body);
             const fileID = req.body.fileID;
             const db = await MongoClient.connect(url);
-            const file = await db.collection("files").findOne({'fileID': fileID});
+            const file = await db.collection("files").findOne({ 'fileID': fileID });
             console.log(file);
             res.json(file);
             res.end();
-        } catch(e) {
+        } catch (e) {
             throw e;
         }
     })

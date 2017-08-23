@@ -144,6 +144,7 @@ var Toolbar = React.createClass({
 var TextField = React.createClass({
   componentDidMount: function() {
     socket.on('contentIn', (content)=>{
+      console.log('contentIn');
       document.getElementById("markdown_input").value = content;
       this.props.mainState.setState({ currentText: content });
     })
@@ -219,6 +220,7 @@ var Signin = React.createClass({
     const currentGoogleUser = gapi.auth2.getAuthInstance().currentUser.get();
     const currentToken = currentGoogleUser.getAuthResponse().id_token;
     fileApi.getFiles(currentToken).then((files) => {
+      console.log(files);
       this.props.mainState.setState({ files: files });
     });
     this.props.mainState.setState({

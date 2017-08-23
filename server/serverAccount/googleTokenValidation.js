@@ -13,6 +13,7 @@ var getUserInfo = function(userToken){
         // If request specified a G Suite domain:
         //var domain = payload['hd'];
       });
+    console.log(16, userInfo);
     return userInfo;
 }
 

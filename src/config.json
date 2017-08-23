@@ -1,4 +1,5 @@
 {
     "portNumbers":[3001,3002],
-    "serverIP": "http://104.236.50.48"
+    "serverIP": "http://localhost"
+    
 }

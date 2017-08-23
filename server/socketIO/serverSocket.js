@@ -22,7 +22,7 @@ const setUpApi = function (app, server) {
       socket.on('updateContent', (info) => {
         const fileID = info.fileID;
         const content = info.content;
-        console.log('updateContent'+fileID);
+        console.log('updateContent', fileID, content);
 
         io.to(fileID).emit('contentIn', content);
       });
