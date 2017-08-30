@@ -1,9 +1,8 @@
 {
-
   "name": "markdown_online",
   "version": "0.1.0",
   "private": true,
-   "homepage": "http://markdown_online/",
+  "homepage": "http://markdown_online/",
   "dependencies": {
     "body-parser": "^1.17.2",
     "cores": "^0.8.5",

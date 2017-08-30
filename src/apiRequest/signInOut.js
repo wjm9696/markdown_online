@@ -1,9 +1,11 @@
 let request = require('request');
 const config = require('./../config.json');
 const serverIP = config.serverIP;
+const serverPort = config.serverPort;
+
 let signin = function (userToken) {
     let options = {
-        url: serverIP + ":3001/put/signin",
+        url: `${serverIP}:${serverPort}/put/signin`,
         method: 'POST',
         json: {userToken: userToken}
     };

@@ -170,6 +170,20 @@ const setUpApi = async function (app) {
             throw e;
         }
     })
+
+    app.post('/delete', async function (req, res) {
+        try {
+            const fileID = req.body.fileID;
+            const email = req.body.email;
+            const db = await MongoClient.connect(url);
+            const file = await db.collection("users").update({ email: userEmail }, {$pull: {'files': fileID}});
+            console.log(file);
+            res.json(file);
+            res.end();
+        } catch (e) {
+            throw e;
+        }
+    })
 }
 
 exports.setUpApi = setUpApi;

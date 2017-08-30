@@ -8,8 +8,11 @@ import GoogleLogin from 'react-google-login';
 import Script from 'react-load-script'
 const config = require('./config.json');
 const serverIP = config.serverIP;
+const serverPort = config.serverPort;
+
 var ReactDOM = require('react-dom');
-var socket = io.connect(serverIP + ':3001/');
+var socket = io.connect(`${serverIP}:${serverPort}/`);
+
 var fileApi = require('./apiRequest/file.js');
 var userApi = require('./apiRequest/signInOut.js')
 var showdown = require('showdown');
@@ -27,6 +30,7 @@ var Main = React.createClass({
       fileID: file.fileID
 
     });
+    socket.emit('joinFile', file.fileID);
     document.getElementById("markdown_input").value = file.fileContent;
     document.getElementById("file_name").value = file.fileTitle;
 
@@ -56,23 +60,32 @@ var Main = React.createClass({
   render() {
     return (
       <div>
-        <User mainState={this}></User>
-        <div id="toolbar">
-          <Toolbar mainState={this} makeid={this.makeid}></Toolbar>
+        <div id="header">
+          <div id="userDic"> 
+            <User mainState={this}></User>
+          </div>
+          <h1 id="title">Markdown Together</h1>
+          
         </div>
-        <div id="sharing">
-          <Sharing mainState={this} updateCurrentFile={this.updateCurrentFile}></Sharing>
-        </div>
-        <div className="clear"></div>
-        
         <div id="fileListDiv">
           <FileList mainState={this} updateCurrentFile={this.updateCurrentFile}></FileList>
         </div>
-        <div id="textFieldDiv">
-          <TextField mainState={this}></TextField>
-        </div>
-        <div id="displayDiv">
-          <Display currentText={this.state.currentText}></Display>
+        <div id="rightColumn">
+          <div id="barDiv">
+            <div id="toolbar">
+              <Toolbar mainState={this} makeid={this.makeid}></Toolbar>
+            </div>
+            <div id="sharing">
+              <Sharing mainState={this} updateCurrentFile={this.updateCurrentFile}></Sharing>
+            </div>
+            <div className="clear"></div>
+          </div>
+          <div id="textFieldDiv">
+            <TextField mainState={this}></TextField>
+          </div>
+          <div id="displayDiv">
+            <Display currentText={this.state.currentText}></Display>
+          </div>
         </div>
 
       </div>
@@ -99,10 +112,11 @@ var Sharing = React.createClass({
   render() {
     return (
       <div>
-        <input type="text" id="fileIDtoJoin"></input>
+        <span id="fileIDSpan">{this.props.mainState.state.fileID}</span>
+        <input type="text" id="fileIDtoJoin" placeholder="Paste file ID to join"></input>
         <button onClick={() => this.onJoinFile(this.props.mainState, this.props.updateCurrentFile)}>Join file</button>
         <button onClick={this.onToggleID}>Share</button>
-        <span id="fileIDSpan">{this.props.mainState.state.fileID}</span>
+        
       </div>
     )
   }
@@ -145,10 +159,10 @@ var Toolbar = React.createClass({
   render() {
     return (
       <div>
-        <input type="text" id="file_name"></input>
         <button onClick={() => this.onClickSave(this.props.mainState)}>save</button>
         <button onClick={this.onClickGetPdf}>generate PDF</button>
         <button onClick={() => this.createNewFile(this.props.mainState, this.props.makeid)}>new file</button>
+        <input type="text" id="file_name" placeholder="Filename here"></input>
       </div>
     )
   }
@@ -170,9 +184,7 @@ var TextField = React.createClass({
   },
   render() {
     return (
-      <div>
-        <textarea name="Text1" cols="40" rows="5" id="markdown_input" onChange={this.onchange}></textarea>
-      </div>
+      <textarea name="Text1" cols="40" rows="5" id="markdown_input" onChange={this.onchange}></textarea>
     );
   }
 })
@@ -200,12 +212,24 @@ var User = React.createClass({
     if (this.props.mainState.state.loggedin) {
       return (
         <div>
-          <div>welcome {this.props.mainState.state.userInfo && this.props.mainState.state.userInfo.ig}</div><Signout mainState={this.props.mainState}></Signout>
+          <div id="googleSignoutDiv">
+            <Signout mainState={this.props.mainState}></Signout>
+          </div>
+          <div id="welcomeMsgDiv">
+            <div>Welcome {this.props.mainState.state.userInfo && this.props.mainState.state.userInfo.ig}</div>
+          </div>
+          
+          <div className="clear"></div>
         </div>
       )
     } else {
       return (
-        <Signin mainState={this.props.mainState}></Signin>
+        <div>
+          <div id="googleSigninDiv">
+            <Signin mainState={this.props.mainState}></Signin>
+          </div>
+          <div className="clear"></div>
+        </div>
       )
     }
   }
@@ -223,7 +247,7 @@ var Signout = React.createClass({
   },
   render() {
     return (
-      <button onClick={this.signOut}>Sign out</button>
+      <div id="signOutButton" onClick={this.signOut}>Sign out</div>
     )
   }
 })
@@ -284,7 +308,7 @@ var FileList = React.createClass({
 var FileListNode = React.createClass({
   render() {
     return (
-      <div onClick={() => this.props.updateCurrentFile(this.props.file)}>
+      <div className="fileListNode"  onClick={() => this.props.updateCurrentFile(this.props.file)}>
         {this.props.file.fileTitle}
       </div>
     )

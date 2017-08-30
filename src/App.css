@@ -25,22 +25,36 @@
 
 #fileListDiv {
   float:left;
-  width: 10%
+  width: 12%;
+  background-color: #f8f9e8;
+  height:95vh;
 }
 
 #textFieldDiv {
   float:left;
-  width: 40%
+  width: 44%;
+  height:84vh;
+  margin-top: -2px;
 }
 
 #displayDiv {
   float: left;
-  width: 50%
+  width: 44%;
+  height:84vh;
+  overflow: auto;
+  color: #103534;
+  line-height: 150%;
+  font-size: 15px;
 }
 
 #markdown_input {
-  width: 90%
-  
+  width: 95%;
+  height: 100%;
+  font-size: 15px;
+  background-color: #183338;
+  color: #e6f2f0;
+  line-height: 150%;
+  font-family: 'Source Code Pro', monospace;
 }
 
 #toolbar {
@@ -54,3 +68,140 @@
 .clear {
   clear: right
 }
+
+
+
+#googleSignoutDiv{
+  float: right
+}
+
+#googleSigninDiv{
+  float: right
+}
+
+body {
+  overflow: hidden;
+}
+
+#title {
+  text-align: center;
+  padding-bottom: 15px;
+  color: #f2f6fc;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 40px;
+  margin-top: -15px;
+}
+
+#header {
+  background-color: #343738;
+  margin-bottom: -27px;
+  height: 15vh;
+}
+
+button {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #599bb3), color-stop(1, #408c99));
+	background:-moz-linear-gradient(top, #599bb3 5%, #408c99 100%);
+	background:-webkit-linear-gradient(top, #599bb3 5%, #408c99 100%);
+	background:-o-linear-gradient(top, #599bb3 5%, #408c99 100%);
+	background:-ms-linear-gradient(top, #599bb3 5%, #408c99 100%);
+	background:linear-gradient(to bottom, #599bb3 5%, #408c99 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#599bb3', endColorstr='#408c99',GradientType=0);
+	background-color:#599bb3;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:1.3vw;
+	font-weight:bold;
+  padding:0.9vw 2.5vw;
+  padding-top: 1.1vw;
+  margin-top: -1px;
+  margin-left: -1px;
+  margin-right: -1px;
+  
+	text-decoration:none;
+	text-shadow:0px 1px 0px #3d768a;
+}
+button:hover {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #408c99), color-stop(1, #599bb3));
+	background:-moz-linear-gradient(top, #408c99 5%, #599bb3 100%);
+	background:-webkit-linear-gradient(top, #408c99 5%, #599bb3 100%);
+	background:-o-linear-gradient(top, #408c99 5%, #599bb3 100%);
+	background:-ms-linear-gradient(top, #408c99 5%, #599bb3 100%);
+	background:linear-gradient(to bottom, #408c99 5%, #599bb3 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#408c99', endColorstr='#599bb3',GradientType=0);
+	background-color:#408c99;
+}
+button:active {
+	position:relative;
+	top:1px;
+}
+
+input, button, submit, textarea {
+  border:none;
+}
+
+#file_name {
+  border:0px solid grey;
+  height: 31px;
+  margin-top: -10px; 
+}
+
+#signOutButton {
+  color: #f2f6fc;
+  padding: 5px;
+  padding-top: 10px;
+  padding-right: 15px;
+  padding-left: 20px;
+  text-decoration: underline;
+}
+
+#signOutButton:hover{
+  color: #e3e9f2;
+  cursor: pointer;
+}
+#welcomeMsgDiv{
+  float: right;
+  color: #f2f6fc;
+  padding: 5px;
+  padding-top: 10px;
+}
+
+#barDiv{
+  background-color: #4b4d51;
+  height: 3.5vw;
+}
+
+#fileIDSpan{
+  color: #f2f6fc;
+  padding-right: 20px;
+}
+
+#fileIDtoJoin{
+  padding-right: 20px;
+  width: 100px;
+  height: 31px;
+}
+
+.fileListNode{
+  margin: 16px;
+  cursor: pointer;
+  font-size: 1.2vw;
+  
+}
+
+.fileListNode:hover{
+  text-decoration: underline;
+}
+
+#g-signin2{
+  width: 100px;
+  height: 50px;
+  overflow: hidden;
+}
+html {
+  position: fixed;
+  width: 100%
+}
+
+
