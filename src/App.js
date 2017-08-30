@@ -156,13 +156,29 @@ var Toolbar = React.createClass({
     });
   },
 
+  deleteFile: (mainState) => {
+    const currentGoogleUser = gapi.auth2.getAuthInstance().currentUser.get();
+    const userToken = currentGoogleUser.getAuthResponse().id_token;
+    const fileID = mainState.state.fileID;
+    fileApi.deleteFile(fileID, userToken).then(() => {
+      return fileApi.getFiles(userToken)
+    }).then((files) => {
+      mainState.setState({ files: files });
+      document.getElementById("markdown_input").value = '';
+      document.getElementById("file_name").value = '';
+    });
+
+  },
+
   render() {
     return (
       <div>
         <button onClick={() => this.onClickSave(this.props.mainState)}>save</button>
         <button onClick={this.onClickGetPdf}>generate PDF</button>
         <button onClick={() => this.createNewFile(this.props.mainState, this.props.makeid)}>new file</button>
+        <button onClick={() => this.deleteFile(this.props.mainState)}>Delete</button>
         <input type="text" id="file_name" placeholder="Filename here"></input>
+
       </div>
     )
   }

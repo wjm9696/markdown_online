@@ -49,8 +49,23 @@ const getFile = function(fileID) {
     });
 }
 
+const deleteFile = function(fileID, userToken) {
+    let options = {
+        url: `${serverIP}:${serverPort}/delete`,
+        method: 'POST',
+        json: {fileID: fileID,
+            userToken: userToken
+        }
+    }
+    return request(options).then((res)=>{
+        return res;
+    });
+}
+
 exports.requestForPdf = requestForPdf;
 exports.saveFile = saveFile;
 exports.getFile = getFile;
 exports.getFiles = getFiles;
+exports.deleteFile = deleteFile;
+
 

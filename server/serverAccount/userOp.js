@@ -35,18 +35,12 @@ const registerUserInfo = async function (user) {
 };
 
 const getUserId = async function (user) {
-    // const db = await MongoClient.connect(url);
-    // const result = await db.collection("users").findOne({ 'email': user.email });
-    // return result._id.toString();
     const dbuser = await getUser(user)
     const id = dbuser._id.toString();
     return id;
 };
 
 const getUserEmail = async function (user) {
-    // const db = await MongoClient.connect(url);
-    // const result = await db.collection("users").findOne({ 'email': user.email });
-    // return result._id.toString();
     const dbuser = await getUser(user)
     return dbuser.email
 };
@@ -174,11 +168,11 @@ const setUpApi = async function (app) {
     app.post('/delete', async function (req, res) {
         try {
             const fileID = req.body.fileID;
-            const email = req.body.email;
+            const userToken = req.body.userToken;            
+            const userEmail = await googleTokenValidation.getUserInfo(userToken).email;
             const db = await MongoClient.connect(url);
-            const file = await db.collection("users").update({ email: userEmail }, {$pull: {'files': fileID}});
-            console.log(file);
-            res.json(file);
+            await db.collection("users").update({ email: userEmail }, {$pull: {'files': fileID}});
+            await db.collection("files").update({ fileID: fileID }, {$pull: {'files': userEmail}});
             res.end();
         } catch (e) {
             throw e;
