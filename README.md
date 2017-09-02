@@ -7,7 +7,6 @@
 • Created front-end using React and React-Bootstrap that renders markdown in real time, making editing, collaborating easier.
 
 <p align="center">
-  <a href="https://nodejs.org/">
-    <img alt="Node.js" src="https://www.dropbox.com/sh/4vxlbzbxaqh5ova/AACffwdU0cUxzyuHo6Cg_a63a?dl=0&preview=IMG_0003.PNG" width="400"/>
-  </a>
+    <img src="https://www.dropbox.com/sh/4vxlbzbxaqh5ova/AACffwdU0cUxzyuHo6Cg_a63a?dl=0&preview=IMG_0003.PNG" width="400"/>
+  
 </p>
