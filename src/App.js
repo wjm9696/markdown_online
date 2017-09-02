@@ -147,7 +147,7 @@ var Toolbar = React.createClass({
 
   },
   createNewFile: (mainState, makeid) => {
-    document.getElementById("markdown_input").value = '';
+    document.getElementById("markdown_input").value = ' ';
     document.getElementById("file_name").value = '';
     const newID = makeid();
     mainState.setState({
